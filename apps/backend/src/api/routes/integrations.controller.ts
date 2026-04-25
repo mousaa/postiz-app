@@ -248,6 +248,7 @@ export class IntegrationsController {
 
       return { url };
     } catch (err) {
+      console.error('[integrations] generateAuthUrl failed:', err);
       return { err: true };
     }
   }
