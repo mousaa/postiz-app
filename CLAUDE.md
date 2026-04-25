@@ -59,3 +59,24 @@ const useCommunity = () => {
 
 - Linting of the project can run only from the root.
 - Use only pnpm.
+
+# Docker / Local Setup
+
+We run from a locally built image (not the upstream prebuilt one) so code changes are reflected.
+
+To apply backend or frontend code changes:
+```bash
+docker compose build postiz && docker compose up -d --force-recreate postiz
+```
+
+Secrets and credentials live in `.env` (gitignored). docker-compose.yaml references them via `${VAR}` syntax. Never hardcode secrets in docker-compose.yaml.
+
+For X (Twitter) OAuth to work locally, ngrok is required since X blocks localhost callback URLs:
+- `NGROK_URL` in `.env` sets the allowed CORS origin and X callback base URL
+- Run ngrok with: `ngrok http --url=crevice-job-etching.ngrok-free.dev 4007`
+- The app itself is used via `localhost:4007`. Ngrok only handles the X OAuth callback redirect.
+
+If Temporal crashes on startup, restart it then restart postiz:
+```bash
+docker compose restart temporal && docker compose restart postiz
+```
